@@ -216,10 +216,7 @@ novo_nome_colunas = [
 
 # Renomeie as colunas do DataFrame
 df.columns = novo_nome_colunas
+#Substituindo NA
+df = df.fillna("Não informado")
 
-def print_all_columns(df):
-    for column in df.columns:
-        print(column)
 
-# Suponha que 'df' seja o seu DataFrame
-print_all_columns(df)
