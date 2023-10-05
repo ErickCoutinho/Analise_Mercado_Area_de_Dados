@@ -1,7 +1,9 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+
 
 data = 'State of Data 2021 - Dataset - Pgina1.csv'
-df = pd.read_csv(data)
+df = pd.read_csv(data, low_memory=False)
 
 
 
@@ -218,5 +220,4 @@ novo_nome_colunas = [
 df.columns = novo_nome_colunas
 #Substituindo NA
 df = df.fillna("Não informado")
-
 
