@@ -245,12 +245,12 @@ print(df.isna().sum())
 
 
 
-# distribuição de gênero
+## distribuição de gênero
 sns.countplot(data=df, x='Genero')
 plt.title('Distribuição de Gênero')
 plt.show()
 
-# Criar um histograma da idade
+## Criar um histograma da idade
 plt.figure(figsize=(10, 6))
 plt.hist(df['Idade'], bins=20, color='skyblue', edgecolor='black')
 plt.title('Histograma da Idade dos Profissionais de Dados')
@@ -263,7 +263,7 @@ plt.show()
 
 
 
-# Gráfico de barras, distribuição de setores
+## Gráfico de barras, distribuição de setores
 plt.figure(figsize=(12, 6))
 sns.countplot(y='Setor', data=df, palette='viridis')
 plt.title('Distribuição de Setores')
@@ -276,7 +276,7 @@ plt.show()
 
 
 
-# Contagem de regiões de origem
+## Contagem de regiões de origem
 regiao_origem_counts = df['Regiao de origem'].value_counts()
 
 # Gráfico de barras
@@ -290,7 +290,7 @@ plt.show()
 
 
 
-#media de salario por genero
+##media de salario por genero
 import re
 
 def extrair_media(faixa_salarial):
@@ -317,7 +317,9 @@ plt.show()
 
 
 
-# Criar um DataFrame contendo os cargos com o gênero que possui o maior salário
+##cargos com maior salario por sexo 
+
+
 data = []
 for cargo, idx in max_salario_por_cargo.items():
     genero = idx[1]
@@ -330,16 +332,20 @@ df_maior_salario_por_cargo = pd.DataFrame(data)
 df_maior_salario_por_cargo = df_maior_salario_por_cargo.sort_values(by='Maior Salario', ascending=False)
 
 # Criar o gráfico de barras empilhadas
-plt.figure(figsize=(12, 6))
+plt.figure(figsize=(12, 8))  # Aumentar o tamanho do gráfico
+
 for genero in df_maior_salario_por_cargo['Genero'].unique():
     subset = df_maior_salario_por_cargo[df_maior_salario_por_cargo['Genero'] == genero]
-    plt.bar(subset['Cargo'], subset['Maior Salario'], label=genero)
+    plt.barh(subset['Cargo'], subset['Maior Salario'], label=genero)  # Usar barh para barras horizontais
 
-plt.xlabel('Cargo')
-plt.ylabel('Maior Salário')
+plt.xlabel('Maior Salário')
+plt.ylabel('Cargo')
 plt.title('Cargos com Maior Salário por Gênero')
-plt.xticks(rotation=90)
 plt.legend()
 plt.tight_layout()
+
+# Adicionar rótulos no eixo y
+plt.gca().invert_yaxis()
+
 plt.show()
 
