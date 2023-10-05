@@ -216,7 +216,117 @@ novo_nome_colunas = [
 
 # Renomeie as colunas do DataFrame
 df.columns = novo_nome_colunas
+data2 = 'df_novo'
+df.to_csv(data2)
+
 #Substituindo NA
 df = df.fillna("Não informado")
+## Padronizar os valores da coluna "Cargo Atual" para letras minúsculas
+df['Cargo Atual'] = df['Cargo Atual'].str.lower()
+################################################################################################################
+'ANALISES'
+
+# Exibindo a distribuição dos níveis de ensino de todo o dataset
+nivel_ensino_counts = df['Nivel de Ensino'].value_counts()
+plt.figure(figsize=(10, 6))
+nivel_ensino_counts.plot(kind='bar', color='red')
+plt.title('Distribuição dos Níveis de Ensino')
+plt.xlabel('Nível de Ensino')
+plt.ylabel('Quantidade')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Exibindo a distribuição dos níveis de ensino dos GESTORES
+gestores_df = df[df['Gestor?'] == 1]
+nivel_ensino_counts_gestores = gestores_df['Nivel de Ensino'].value_counts()
+plt.figure(figsize=(10, 6))
+nivel_ensino_counts_gestores.plot(kind='bar', color='blue')
+plt.title('Distribuição dos Níveis de Ensino para Gestores')
+plt.xlabel('Nível de Ensino')
+plt.ylabel('Quantidade')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+df_salario_cargo = df[['Cargo Atual', 'Faixa salarial']]
+df_salario_cargo = df_salario_cargo[df_salario_cargo['Cargo Atual'] != 'não informado']
+
+# Limpar a coluna 'Faixa salarial' para manter apenas valores numéricos
+df_salario_cargo['Faixa salarial'] = df_salario_cargo['Faixa salarial'].str.extract(r'(\d+\.\d+)').astype(float)
+
+salario_por_cargo = df_salario_cargo.groupby('Cargo Atual')['Faixa salarial'].mean().sort_values(ascending=False).head(5)
+plt.figure(figsize=(8, 8))
+salario_por_cargo.plot(kind='bar', color='red')
+plt.title('Top 5 Cargos com Maiores Salários Médios')
+plt.xlabel('Cargo Atual', fontsize = 12)
+plt.ylabel('Média de Salário')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+
+
+# Imprimir a quantidade de pessoas por cargo
+quantidade_pessoas_por_cargo = df_salario_cargo['Cargo Atual'].value_counts()
+print('Quantidade de Pessoas por Cargo:')
+print(quantidade_pessoas_por_cargo)
+
+#############################################################################################################################
+'Analise Shelda'
+
+# Verifique se a coluna 'Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?' existe
+if 'Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?' in df.columns:
+    # Extraia as respostas para a pergunta sobre critérios de decisão
+    respostas_critérios = df['Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?'].dropna()
+    # Divida as respostas em palavras-chave (você pode ajustar isso conforme necessário)
+    palavras_chave = ['salário', 'oportunidade', 'clima', 'benefícios', 'tecnologia', 'crescimento', 'liderança']
+    # Inicialize um dicionário para contar a frequência de cada palavra-chave
+    contagem_critérios = {palavra: 0 for palavra in palavras_chave}
+    # Conte a frequência de cada palavra-chave nas respostas
+    for resposta in respostas_critérios:
+        for palavra in palavras_chave:
+            if palavra in resposta.lower():
+                contagem_critérios[palavra] += 1
+    for palavra, contagem in contagem_critérios.items():
+        print(f'{palavra.capitalize()}: {contagem} vezes')
+    # Crie o gráfico de barras
+    plt.figure(figsize=(10, 6))
+    plt.bar(contagem_critérios.keys(), contagem_critérios.values())
+    plt.xlabel('Critérios de Decisão')
+    plt.ylabel('Contagem')
+    plt.title('Contagem dos Critérios que Influenciam a Decisão de Mudar de Emprego')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    # Exiba o gráfico
+    plt.show()
+else:
+    print('A coluna especificada não existe no conjunto de dados.')
+
+
+
+# Verifique se a coluna 'Idade' existe
+if 'Idade' in df.columns:
+    # Remova possíveis valores não numéricos da coluna 'Idade'
+    df['Idade'] = pd.to_numeric(df['Idade'], errors='coerce')
+    # Calcule as estatísticas descritivas da idade
+    idade_media = df['Idade'].mean()
+    idade_mediana = df['Idade'].median()
+    idade_minima = df['Idade'].min()
+    idade_maxima = df['Idade'].max()
+    idade_desvio_padrao = df['Idade'].std()
+    # Exiba as estatísticas descritivas
+    print(f"\nMédia de Idade: {idade_media:.2f} anos")
+    print(f"Mediana de Idade: {idade_mediana} anos")
+    print(f"Idade Mínima: {idade_minima} anos")
+    print(f"Idade Máxima: {idade_maxima} anos")
+    print(f"Desvio Padrão de Idade: {idade_desvio_padrao:.2f} anos")
+else:
+    print('A coluna "Idade" não existe no conjunto de dados ou contém valores não numéricos.')
+
+
+#############################################################################################################################
+'ANALISE MAVERICK'
+
 
 
