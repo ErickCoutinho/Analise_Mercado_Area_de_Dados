@@ -290,7 +290,26 @@ plt.show()
 
 
 
+#media de salario por genero
+import re
 
+def extrair_media(faixa_salarial):
+    if isinstance(faixa_salarial, str):
+        valores = re.findall(r'R\$\s([\d,.]+)', faixa_salarial)
+        valores = [float(valor.replace(',', '').replace('.', '')) for valor in valores]
+        return sum(valores) / len(valores)
+    else:
+        return 0  # Retorna 0 para valores não processáveis
 
+# Aplicar a função para extrair a média de salário para cada linha
+df['Media de Salario'] = df['Faixa salarial'].apply(extrair_media)
 
+# Agrupe os dados por gênero e calcule a média de salário para cada grupo
+media_salario_por_genero = df.groupby('Genero')['Media de Salario'].mean()
 
+#gráfico de barras da média de salário por sexo
+plt.bar(media_salario_por_genero.index, media_salario_por_genero.values)
+plt.xlabel('Gênero')
+plt.ylabel('Média de Salário')
+plt.title('Média de Salário por Sexo')
+plt.show()
