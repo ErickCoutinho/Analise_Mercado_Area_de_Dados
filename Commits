@@ -1,8 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-
 data = 'State of Data 2021 - Dataset - Pgina1.csv'
 df = pd.read_csv(data)
 
@@ -219,28 +217,124 @@ novo_nome_colunas = [
 
 # Renomeie as colunas do DataFrame
 df.columns = novo_nome_colunas
+data2 = 'df_novo'
+df.to_csv(data2)
 
-def print_all_columns(df):
-    for column in df.columns:
-        print(column)
+#Substituindo NA
+df = df.fillna("Não informado")
+## Padronizar os valores da coluna "Cargo Atual" para letras minúsculas
+df['Cargo Atual'] = df['Cargo Atual'].str.lower()
+################################################################################################################
+'ANALISES'
 
-# Suponha que 'df' seja o seu DataFrame
-print_all_columns(df)
+# Exibindo a distribuição dos níveis de ensino de todo o dataset
+nivel_ensino_counts = df['Nivel de Ensino'].value_counts()
+plt.figure(figsize=(10, 6))
+nivel_ensino_counts.plot(kind='bar', color='red')
+plt.title('Distribuição dos Níveis de Ensino')
+plt.xlabel('Nível de Ensino')
+plt.ylabel('Quantidade')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+# Exibindo a distribuição dos níveis de ensino dos GESTORES
+gestores_df = df[df['Gestor?'] == 1]
+nivel_ensino_counts_gestores = gestores_df['Nivel de Ensino'].value_counts()
+plt.figure(figsize=(10, 6))
+nivel_ensino_counts_gestores.plot(kind='bar', color='blue')
+plt.title('Distribuição dos Níveis de Ensino para Gestores')
+plt.xlabel('Nível de Ensino')
+plt.ylabel('Quantidade')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+df_salario_cargo = df[['Cargo Atual', 'Faixa salarial']]
+df_salario_cargo = df_salario_cargo[df_salario_cargo['Cargo Atual'] != 'não informado']
+
+# Limpar a coluna 'Faixa salarial' para manter apenas valores numéricos
+df_salario_cargo['Faixa salarial'] = df_salario_cargo['Faixa salarial'].str.extract(r'(\d+\.\d+)').astype(float)
+
+salario_por_cargo = df_salario_cargo.groupby('Cargo Atual')['Faixa salarial'].mean().sort_values(ascending=False).head(5)
+plt.figure(figsize=(8, 8))
+salario_por_cargo.plot(kind='bar', color='red')
+plt.title('Top 5 Cargos com Maiores Salários Médios')
+plt.xlabel('Cargo Atual', fontsize = 12)
+plt.ylabel('Média de Salário')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+
+
+# Imprimir a quantidade de pessoas por cargo
+quantidade_pessoas_por_cargo = df_salario_cargo['Cargo Atual'].value_counts()
+print('Quantidade de Pessoas por Cargo:')
+print(quantidade_pessoas_por_cargo)
+
+#############################################################################################################################
+'Analise Shelda'
+
+# Verifique se a coluna 'Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?' existe
+if 'Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?' in df.columns:
+    # Extraia as respostas para a pergunta sobre critérios de decisão
+    respostas_critérios = df['Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?'].dropna()
+    # Divida as respostas em palavras-chave (você pode ajustar isso conforme necessário)
+    palavras_chave = ['salário', 'oportunidade', 'clima', 'benefícios', 'tecnologia', 'crescimento', 'liderança']
+    # Inicialize um dicionário para contar a frequência de cada palavra-chave
+    contagem_critérios = {palavra: 0 for palavra in palavras_chave}
+    # Conte a frequência de cada palavra-chave nas respostas
+    for resposta in respostas_critérios:
+        for palavra in palavras_chave:
+            if palavra in resposta.lower():
+                contagem_critérios[palavra] += 1
+    for palavra, contagem in contagem_critérios.items():
+        print(f'{palavra.capitalize()}: {contagem} vezes')
+    # Crie o gráfico de barras
+    plt.figure(figsize=(10, 6))
+    plt.bar(contagem_critérios.keys(), contagem_critérios.values())
+    plt.xlabel('Critérios de Decisão')
+    plt.ylabel('Contagem')
+    plt.title('Contagem dos Critérios que Influenciam a Decisão de Mudar de Emprego')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    # Exiba o gráfico
+    plt.show()
+else:
+    print('A coluna especificada não existe no conjunto de dados.')
+
+
+
+# Verifique se a coluna 'Idade' existe
+if 'Idade' in df.columns:
+    # Remova possíveis valores não numéricos da coluna 'Idade'
+    df['Idade'] = pd.to_numeric(df['Idade'], errors='coerce')
+    # Calcule as estatísticas descritivas da idade
+    idade_media = df['Idade'].mean()
+    idade_mediana = df['Idade'].median()
+    idade_minima = df['Idade'].min()
+    idade_maxima = df['Idade'].max()
+    idade_desvio_padrao = df['Idade'].std()
+    # Exiba as estatísticas descritivas
+    print(f"\nMédia de Idade: {idade_media:.2f} anos")
+    print(f"Mediana de Idade: {idade_mediana} anos")
+    print(f"Idade Mínima: {idade_minima} anos")
+    print(f"Idade Máxima: {idade_maxima} anos")
+    print(f"Desvio Padrão de Idade: {idade_desvio_padrao:.2f} anos")
+else:
+    print('A coluna "Idade" não existe no conjunto de dados ou contém valores não numéricos.')
 
 
 
 
 
-
-
-
-
-## distribuição de gênero
+# distribuição de gênero
 sns.countplot(data=df, x='Genero')
 plt.title('Distribuição de Gênero')
 plt.show()
 
-## Criar um histograma da idade
+# Criar um histograma da idade
 plt.figure(figsize=(10, 6))
 plt.hist(df['Idade'], bins=20, color='skyblue', edgecolor='black')
 plt.title('Histograma da Idade dos Profissionais de Dados')
@@ -253,7 +347,7 @@ plt.show()
 
 
 
-## Gráfico de barras, distribuição de setores
+# Gráfico de barras, distribuição de setores
 plt.figure(figsize=(12, 6))
 sns.countplot(y='Setor', data=df, palette='viridis')
 plt.title('Distribuição de Setores')
@@ -266,7 +360,7 @@ plt.show()
 
 
 
-## Contagem de regiões de origem
+# Contagem de regiões de origem
 regiao_origem_counts = df['Regiao de origem'].value_counts()
 
 # Gráfico de barras
@@ -281,33 +375,59 @@ plt.show()
 
 
 
-##media de salario por genero
+#media de salario por genero
 import re
+import re
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+# Função para extrair a média de salário
 def extrair_media(faixa_salarial):
     if isinstance(faixa_salarial, str):
         valores = re.findall(r'R\$\s([\d,.]+)', faixa_salarial)
         valores = [float(valor.replace(',', '').replace('.', '')) for valor in valores]
-        return sum(valores) / len(valores)
+        if valores:
+            return sum(valores) / len(valores)
+        else:
+            return 0
     else:
-        return 0  # Retorna 0 para valores não processáveis
+        return 0
 
 # Aplicar a função para extrair a média de salário para cada linha
 df['Media de Salario'] = df['Faixa salarial'].apply(extrair_media)
 
 # Agrupe os dados por gênero e calcule a média de salário para cada grupo
-media_salario_por_genero = df.groupby('Genero')['Media de Salario'].mean()
+media_salario_por_genero = df.groupby('Genero')['Media de Salario'].mean().reset_index()
 
-#gráfico de barras da média de salário por sexo
-plt.bar(media_salario_por_genero.index, media_salario_por_genero.values)
+# Criar um gráfico de barras bonito com Seaborn
+plt.figure(figsize=(10, 6))
+sns.barplot(x='Genero', y='Media de Salario', data=media_salario_por_genero, palette='viridis')
 plt.xlabel('Gênero')
 plt.ylabel('Média de Salário')
 plt.title('Média de Salário por Sexo')
+plt.xticks(rotation=0)  # Mantém os rótulos do eixo x na posição padrão
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
 plt.show()
 
 
 
-##cargos com maior salario por sexo
+
+import re
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Função para extrair a média de salário
+def extrair_media(faixa_salarial):
+    if isinstance(faixa_salarial, str):
+        valores = re.findall(r'R\$\s([\d,.]+)', faixa_salarial)
+        valores = [float(valor.replace(',', '').replace('.', '')) for valor in valores]
+        if valores:
+            return sum(valores) / len(valores)
+        else:
+            return 0
+    else:
+        return 0
 
 # Aplicar a função para extrair a média de salário para cada linha
 df['Media de Salario'] = df['Faixa salarial'].apply(extrair_media)
@@ -318,30 +438,16 @@ cargos_maior_salario_por_genero = df.groupby(['Genero', 'Cargo Atual'])['Media d
 # Resetar o índice do DataFrame resultante
 cargos_maior_salario_por_genero = cargos_maior_salario_por_genero.reset_index()
 
-# Filtrar os cargos com os maiores salários por sexo
-cargos_maior_salario_feminino = cargos_maior_salario_por_genero[cargos_maior_salario_por_genero['Genero'] == 'Feminino']
-cargos_maior_salario_masculino = cargos_maior_salario_por_genero[cargos_maior_salario_por_genero['Genero'] == 'Masculino']
+# Classificar o DataFrame em ordem decrescente de salário
+cargos_maior_salario_por_genero = cargos_maior_salario_por_genero.sort_values(by='Media de Salario', ascending=False)
 
-# Classificar os DataFrames em ordem decrescente de salário
-cargos_maior_salario_feminino = cargos_maior_salario_feminino.sort_values(by='Media de Salario', ascending=False)
-cargos_maior_salario_masculino = cargos_maior_salario_masculino.sort_values(by='Media de Salario', ascending=False)
-
-# Plotar gráficos de barras separados para cada sexo
+# Plotar um único gráfico de barras com cores diferentes para cada sexo
 plt.figure(figsize=(12, 6))
-
-plt.subplot(1, 2, 1)
-plt.bar(cargos_maior_salario_feminino['Cargo Atual'], cargos_maior_salario_feminino['Media de Salario'])
-plt.title('Cargos com Maior Salário (Feminino)')
-plt.xticks(rotation=90)
+sns.barplot(x='Cargo Atual', y='Media de Salario', hue='Genero', data=cargos_maior_salario_por_genero, palette='Set2')
+plt.title('Cargos com Maior Salário por Sexo')
 plt.xlabel('Cargo')
 plt.ylabel('Média de Salário')
-
-plt.subplot(1, 2, 2)
-plt.bar(cargos_maior_salario_masculino['Cargo Atual'], cargos_maior_salario_masculino['Media de Salario'])
-plt.title('Cargos com Maior Salário (Masculino)')
 plt.xticks(rotation=90)
-plt.xlabel('Cargo')
-plt.ylabel('Média de Salário')
-
+plt.legend(title='Gênero')
 plt.tight_layout()
 plt.show()
