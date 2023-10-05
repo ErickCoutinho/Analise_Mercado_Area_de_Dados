@@ -317,21 +317,29 @@ plt.show()
 
 
 
-# Primeiro, garanta que a coluna 'Media de Salario' seja do tipo numérico
-df['Media de Salario'] = pd.to_numeric(df['Media de Salario'], errors='coerce')
+# Criar um DataFrame contendo os cargos com o gênero que possui o maior salário
+data = []
+for cargo, idx in max_salario_por_cargo.items():
+    genero = idx[1]
+    max_salario = media_salario_por_cargo_genero[idx]
+    data.append({'Cargo': cargo, 'Genero': genero, 'Maior Salario': max_salario})
 
-# Encontre o índice da linha com o maior salário para cada gênero
-indices_max_salario_por_genero = df.groupby('Genero')['Media de Salario'].idxmax()
+df_maior_salario_por_cargo = pd.DataFrame(data)
 
-# Use os índices para obter as informações completas das linhas
-cargos_com_maior_salario_por_genero = df.loc[indices_max_salario_por_genero, ['Genero', 'Cargo Atual', 'Media de Salario']]
+# Ordenar o DataFrame pelo valor do maior salário
+df_maior_salario_por_cargo = df_maior_salario_por_cargo.sort_values(by='Maior Salario', ascending=False)
 
-# Plotar o gráfico de barras
-plt.figure(figsize=(10, 6))
-plt.bar(cargos_com_maior_salario_por_genero['Genero'], cargos_com_maior_salario_por_genero['Media de Salario'])
-plt.xlabel('Gênero')
-plt.ylabel('Média de Salário')
+# Criar o gráfico de barras empilhadas
+plt.figure(figsize=(12, 6))
+for genero in df_maior_salario_por_cargo['Genero'].unique():
+    subset = df_maior_salario_por_cargo[df_maior_salario_por_cargo['Genero'] == genero]
+    plt.bar(subset['Cargo'], subset['Maior Salario'], label=genero)
+
+plt.xlabel('Cargo')
+plt.ylabel('Maior Salário')
 plt.title('Cargos com Maior Salário por Gênero')
-plt.xticks(rotation=45)  # Rotacionar os rótulos do eixo x para melhor visualização
+plt.xticks(rotation=90)
+plt.legend()
 plt.tight_layout()
 plt.show()
+
