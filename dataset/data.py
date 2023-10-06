@@ -227,7 +227,7 @@ df = df.fillna("Não informado")
 ## Padronizar os valores da coluna "Cargo Atual" para letras minúsculas
 df['Cargo Atual'] = df['Cargo Atual'].str.lower()
 ################################################################################################################
-'ANALISES'
+'ANALISE ERICK'
 
 # Exibindo a distribuição dos níveis de ensino de todo o dataset
 nivel_ensino_counts = df['Nivel de Ensino'].value_counts()
