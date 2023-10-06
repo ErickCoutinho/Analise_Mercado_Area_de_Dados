@@ -328,5 +328,73 @@ else:
 #############################################################################################################################
 'ANALISE MAVERICK'
 
+# Gráfico de barras, distribuição de setores
+df = df[df['Setor'] != 'Não informado']
+plt.figure(figsize=(12, 6))
+sns.countplot(y='Setor', data=df, palette='viridis')
+plt.title('Distribuição de Setores')
+plt.xlabel('Contagem')
+plt.ylabel('Setor')
+plt.xticks(rotation=45, ha='right')  # Rotaciona os rótulos e alinha à direita para melhor legibilidade
+plt.tight_layout()
+plt.show()
+
+#media de salario por genero
+import re
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Função para extrair a média de salário
+def extrair_media(faixa_salarial):
+    if isinstance(faixa_salarial, str):
+        valores = re.findall(r'R\$\s([\d,.]+)', faixa_salarial)
+        valores = [float(valor.replace(',', '').replace('.', '')) for valor in valores]
+        if valores:
+            return sum(valores) / len(valores)
+        else:
+            return 0
+    else:
+        return 0
+
+# Aplicar a função para extrair a média de salário para cada linha
+df['Media de Salario'] = df['Faixa salarial'].apply(extrair_media)
+df = df[df['Genero'] != 'Outro']
+# Agrupe os dados por gênero e calcule a média de salário para cada grupo
+media_salario_por_genero = df.groupby('Genero')['Media de Salario'].mean().reset_index()
+plt.figure(figsize=(10, 6))
+sns.barplot(x='Genero', y='Media de Salario', data=media_salario_por_genero, palette='viridis')
+plt.xlabel('Gênero')
+plt.ylabel('Média de Salário')
+plt.title('Média de Salário por Sexo')
+plt.xticks(rotation=0)  # Mantém os rótulos do eixo x na posição padrão
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+#COMPARAÇÃO DE SALARIO COM O MESMO CARGO
+# Função
+def tem_homens_e_mulheres(cargo):
+    homens = df[(df['Cargo Atual'] == cargo) & (df['Genero'] == 'Masculino')].shape[0]
+    mulheres = df[(df['Cargo Atual'] == cargo) & (df['Genero'] == 'Feminino')].shape[0]
+    return homens > 0 and mulheres > 0
+
+df['Media de Salario'] = df['Faixa salarial'].apply(extrair_media)
+df = df[df['Cargo Atual'] != 'Não informado']
+# Filtrar os cargos que atendem à condição de ter representantes de ambos os gêneros
+df = df[df['Cargo Atual'].apply(tem_homens_e_mulheres)]
+cargos_maior_salario_por_genero = df.groupby(['Genero', 'Cargo Atual'])['Media de Salario'].max()
+cargos_maior_salario_por_genero = cargos_maior_salario_por_genero.reset_index()
+cargos_maior_salario_por_genero = cargos_maior_salario_por_genero.sort_values(by='Media de Salario', ascending=False).head(8)
+# Plotar um único gráfico de barras com cores diferentes para cada sexo
+plt.figure(figsize=(12, 12))
+sns.barplot(x='Cargo Atual', y='Media de Salario', hue='Genero', data=cargos_maior_salario_por_genero, palette='Set2')
+plt.title('Cargos com Maior Salário por Sexo')
+plt.xlabel('Cargo')
+plt.ylabel('Média de Salário')
+plt.xticks(rotation=90)
+plt.legend(title='Gênero')
+plt.tight_layout()
+plt.show()
+
 
 
