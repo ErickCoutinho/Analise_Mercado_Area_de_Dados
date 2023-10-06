@@ -1,4 +1,7 @@
 import pandas as pd
+import re
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 data = 'State of Data 2021 - Dataset - Pgina1.csv'
 df = pd.read_csv(data)
@@ -339,11 +342,6 @@ plt.xticks(rotation=45, ha='right')  # Rotaciona os rótulos e alinha à direita
 plt.tight_layout()
 plt.show()
 
-#media de salario por genero
-import re
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 # Função para extrair a média de salário
 def extrair_media(faixa_salarial):
     if isinstance(faixa_salarial, str):
@@ -372,27 +370,14 @@ plt.tight_layout()
 plt.show()
 
 #COMPARAÇÃO DE SALARIO COM O MESMO CARGO
-# Função
-def tem_homens_e_mulheres(cargo):
-    homens = df[(df['Cargo Atual'] == cargo) & (df['Genero'] == 'Masculino')].shape[0]
-    mulheres = df[(df['Cargo Atual'] == cargo) & (df['Genero'] == 'Feminino')].shape[0]
-    return homens > 0 and mulheres > 0
-
-df['Media de Salario'] = df['Faixa salarial'].apply(extrair_media)
-df = df[df['Cargo Atual'] != 'Não informado']
-# Filtrar os cargos que atendem à condição de ter representantes de ambos os gêneros
-df = df[df['Cargo Atual'].apply(tem_homens_e_mulheres)]
-cargos_maior_salario_por_genero = df.groupby(['Genero', 'Cargo Atual'])['Media de Salario'].max()
-cargos_maior_salario_por_genero = cargos_maior_salario_por_genero.reset_index()
-cargos_maior_salario_por_genero = cargos_maior_salario_por_genero.sort_values(by='Media de Salario', ascending=False).head(8)
-# Plotar um único gráfico de barras com cores diferentes para cada sexo
-plt.figure(figsize=(12, 12))
-sns.barplot(x='Cargo Atual', y='Media de Salario', hue='Genero', data=cargos_maior_salario_por_genero, palette='Set2')
-plt.title('Cargos com Maior Salário por Sexo')
+cargos_comuns = set(df[df['Genero'] == 'Masculino']['Cargo Atual']).intersection(set(df[df['Genero'] == 'Feminino']['Cargo Atual']))
+df_cargos_comuns = df[df['Cargo Atual'].isin(cargos_comuns)]
+plt.figure(figsize=(12, 8))
+sns.barplot(x='Cargo Atual', y='Media de Salario', hue='Genero', data=df_cargos_comuns, palette='Set2')
+plt.title('Comparação Salarial entre Homens e Mulheres nos Mesmos Cargos')
 plt.xlabel('Cargo')
 plt.ylabel('Média de Salário')
 plt.xticks(rotation=90)
-plt.legend(title='Gênero')
 plt.tight_layout()
 plt.show()
 
