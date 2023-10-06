@@ -227,7 +227,7 @@ df = df.fillna("Não informado")
 ## Padronizar os valores da coluna "Cargo Atual" para letras minúsculas
 df['Cargo Atual'] = df['Cargo Atual'].str.lower()
 ################################################################################################################
-'ANALISE ERICK'
+'ANALISES'
 
 # Exibindo a distribuição dos níveis de ensino de todo o dataset
 nivel_ensino_counts = df['Nivel de Ensino'].value_counts()
@@ -276,7 +276,6 @@ print('Quantidade de Pessoas por Cargo:')
 print(quantidade_pessoas_por_cargo)
 
 #############################################################################################################################
-'Analise Shelda'
 
 # Verifique se a coluna 'Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?' existe
 if 'Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?' in df.columns:
@@ -329,7 +328,6 @@ else:
 
 
 #############################################################################################################################
-'ANALISE MAVERICK'
 
 # Gráfico de barras, distribuição de setores
 df = df[df['Setor'] != 'Não informado']
