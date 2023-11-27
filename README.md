@@ -1,2 +1,2 @@
 # LAB_CD
-Atividade Pré-processamento ; Laboratório de CD
+Análise de um conjunto de dados sobre o mercado de trabalho na área de dados, fornecido pela Data Hackers, destacando sua importância na compreensão das dinâmicas e tendências em constante evolução nesse setor. A análise oferece insights valiosos sobre a demografia dos profissionais, desafios enfrentados, preferências de ferramentas e tecnologias, e expectativas em relação ao ambiente de trabalho.
