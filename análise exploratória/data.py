@@ -8,7 +8,7 @@ import seaborn as sns
 
 data = 'State of Data 2021 - Dataset - Pgina1.csv'
 df = pd.read_csv(data)
-
+print(df.info())
 
 #Renomeaçõ de colunas
 novo_nome_colunas = [
@@ -55,7 +55,7 @@ novo_nome_colunas = [
     'Dados armazenados em bancos NoSQL', 'Imagens', 'Textos/Documentos', 'Vídeos', 'Áudios', 'Planilhas', 'Dados georeferenciados',
     'Entre as fontes de dados listadas, quais você utiliza na maior parte do tempo?', 'Dados relacionais (estruturados em bancos SQL)',
     'Dados armazenados em bancos NoSQL', 'Imagens', 'Textos/Documentos', 'Vídeos', 'Áudios', 'Planilhas', 'Dados georeferenciados',
-    'Quais das linguagens listadas abaixo você utiliza no trabalho?', 'SQL', 'R ', 'Python', 'C/C++/C#', '.NET', 'Java', 'Julia', 'SAS/Stata',
+    'Quais das linguagens listadas abaixo você utiliza no trabalho?', 'SQL_SQL', 'R ', 'Python', 'C/C++/C#', '.NET', 'Java', 'Julia', 'SAS/Stata',
     'Visual Basic/VBA', 'Scala', 'Matlab', 'PHP', 'Javascript', 'Não utilizo nenhuma linguagem',
     'Entre as linguagens listadas abaixo, qual é a que você mais utiliza no trabalho?', 'SQL', 'R ', 'Python', 'C/C++/C#', '.NET', 'Java', 'Julia', 'SAS/Stata',
     'Visual Basic/VBA', 'Scala', 'Matlab', 'PHP', 'Javascript', 'Não utilizo nenhuma linguagem',
@@ -226,7 +226,7 @@ data2 = 'df_novo'
 df.to_csv(data2)
 
 #Substituindo NA
-df = df.fillna("Não informado")
+df = df.fillna('Não Informado')
 ## Padronizar os valores da coluna "Cargo Atual" para letras minúsculas
 df['Cargo Atual'] = df['Cargo Atual'].str.lower()
 df.to_csv('Dataset - Dados')
@@ -246,10 +246,11 @@ df = df[df['Nivel de Ensino'] != 'Não informado']
 nivel_ensino_counts = df['Nivel de Ensino'].value_counts()
 plt.figure(figsize=(10, 6))
 sns.barplot(x=nivel_ensino_counts.index, y=nivel_ensino_counts.values, hue=nivel_ensino_counts.index, palette='viridis', legend=False)
-plt.title('Distribuição dos Níveis de Ensino')
-plt.xlabel('Nível de Ensino')
-plt.ylabel('Quantidade')
-plt.xticks(rotation=45)
+plt.title('Distribuição dos Níveis de Ensino',fontsize = 14)
+plt.xlabel('Nível de Ensino',fontsize = 15)
+plt.ylabel('Quantidade',fontsize = 15)
+plt.xticks(rotation=45,fontsize = 14)
+plt.yticks(fontsize = 14)
 plt.tight_layout()
 plt.show()
 
@@ -258,10 +259,11 @@ gestores_df = df[df['Gestor?'] == 1]
 nivel_ensino_counts_gestores = gestores_df['Nivel de Ensino'].value_counts()
 plt.figure(figsize=(10, 6))
 sns.barplot(x=nivel_ensino_counts_gestores.index, y=nivel_ensino_counts_gestores.values, hue=nivel_ensino_counts_gestores.index, palette='viridis', legend=False)
-plt.title('Distribuição dos Níveis de Ensino para Gestores')
-plt.xlabel('Nível de Ensino')
-plt.ylabel('Quantidade')
-plt.xticks(rotation=45)
+plt.title('Distribuição dos Níveis de Ensino para Gestores',fontsize = 14)
+plt.xlabel('Nível de Ensino',fontsize = 15)
+plt.ylabel('Quantidade',fontsize = 15)
+plt.xticks(rotation=45, fontsize = 14)
+plt.yticks(fontsize = 14)
 plt.tight_layout()
 plt.show()
 ######################################
@@ -286,7 +288,6 @@ quantidade_pessoas_por_cargo = df_salario_cargo['Cargo Atual'].value_counts()
 print('Quantidade de Pessoas por Cargo:')
 print(quantidade_pessoas_por_cargo)
 
-
 # Verifique se a coluna 'Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?' existe
 if 'Quais os principais critérios que você leva em consideração no momento de decidir onde trabalhar?' in df.columns:
     # Extraia as respostas para a pergunta sobre critérios de decisão
@@ -306,10 +307,11 @@ if 'Quais os principais critérios que você leva em consideração no momento d
     plt.figure(figsize=(10, 6))
 
     plt.bar(contagem_critérios.keys(), contagem_critérios.values(), color=cores_degrade_roxo_verde)
-    plt.xlabel('Critérios de Decisão')
-    plt.ylabel('Contagem')
-    plt.title('Contagem dos Critérios que Influenciam a Decisão de Mudar de Emprego')
-    plt.xticks(rotation=45)
+    plt.xlabel('Critérios de Decisão',fontsize = 14)
+    plt.ylabel('Contagem',fontsize = 15)
+    plt.title('Contagem dos Critérios que Influenciam a Decisão de Mudar de Emprego',fontsize = 15)
+    plt.xticks(rotation=45,fontsize = 14)
+    plt.yticks(fontsize = 14)
     plt.tight_layout()
     # Exiba o gráfico
     plt.show()
@@ -390,9 +392,47 @@ cargos_comuns = list(cargos_comuns)[:7]
 df_cargos_comuns = df[df['Cargo Atual'].isin(cargos_comuns)]
 plt.figure(figsize=(14, 8))
 sns.barplot(x='Cargo Atual', y='Media de Salario', hue='Genero', data=df_cargos_comuns, palette='Set2')
-plt.title('Comparação Salarial entre Homens e Mulheres nos Mesmos Cargos')
-plt.xlabel('Cargo')
-plt.ylabel('Média de Salário')
-plt.xticks(rotation=25)
+plt.title('Comparação Salarial entre Homens e Mulheres nos Mesmos Cargos',fontsize=14)
+plt.xlabel('Cargo',fontsize=15)
+plt.ylabel('Média de Salário',fontsize=15)
+plt.yticks(fontsize=14)
+plt.xticks(rotation=25, fontsize=14)
 plt.tight_layout()
+plt.show()
+
+linguagem_cols = [
+    'SQL_SQL',
+    'R ',
+    'Python',
+    'C/C++/C#',
+    '.NET',
+    'Java',
+    'Julia',
+    'SAS/Stata',
+    'Visual Basic/VBA',
+    'Scala',
+    'Matlab',
+    'PHP',
+    'Javascript'
+]
+
+# Converter as colunas para tipo numérico, tratando 'Sim' como 1 e 'Não' como 0
+df[linguagem_cols] = df[linguagem_cols].applymap(lambda x: 1 if x == 'Sim' else 0 if x == 'Não' else pd.to_numeric(x, errors='coerce'))
+
+# Criar DataFrame auxiliar
+linguagens_df = df[linguagem_cols].sum().reset_index()
+linguagens_df.columns = ['Linguagem', 'Número de Respondentes']
+
+# Remover 'P21' do rótulo
+linguagens_df['Linguagem'] = linguagens_df['Linguagem'].apply(lambda x: x.split('_')[-1].strip())
+
+# Ordenar as linguagens por frequência de uso
+linguagens_df = linguagens_df.sort_values(by='Número de Respondentes', ascending=False)
+
+# Criar o gráfico de barras
+plt.figure(figsize=(12, 8))
+sns.barplot(x='Número de Respondentes', y='Linguagem', data=linguagens_df, palette='viridis', ci=None)
+plt.title('Frequência de Uso de Linguagens de Programação')
+plt.xlabel('Número de Respondentes')
+plt.ylabel('Linguagem de Programação')
 plt.show()
