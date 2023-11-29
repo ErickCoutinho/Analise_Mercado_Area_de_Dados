@@ -5,5 +5,8 @@ Ao realizar a análise do conjunto de dados de 2021, desenvolvi um mini artigo q
 
 Autores
 Erick Ramos Coutinho
+
 Shelda Souza Ramos
+
 Maverick Alekyne De Sousa Ribeiro
+
