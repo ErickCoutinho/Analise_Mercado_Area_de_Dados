@@ -3,8 +3,11 @@ Análise de um conjunto de dados sobre o mercado de trabalho na área de dados, 
 
 Ao realizar a análise do conjunto de dados de 2021, desenvolvi um mini artigo que abrangeu etapas de pré-processamento e uma análise comparativa entre os datasets de 2021 e 2022, ambos provenientes do Data Hackers.
 
-Autores
+Autores:
+
 Erick Ramos Coutinho
+
 Shelda Souza Ramos
+
 Maverick Alekyne De Sousa Ribeiro
 
